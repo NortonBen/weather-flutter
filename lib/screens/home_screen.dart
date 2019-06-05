@@ -98,6 +98,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  _refreshWeather() {
+    setState(() {
+      widget._isLoading = true;
+    });
+    var fut = _loadData();
+    fut.then(_handerData);
+  }
+
   @override
   Widget build(BuildContext context) {
     if(widget.detail == null){
@@ -120,31 +128,31 @@ class _HomeScreenState extends State<HomeScreen> {
         return modal;
       }
       return Column(
-        children: <Widget>[
-          Expanded(
-            flex: 8,
-            child: DetailView(detail: widget.detail ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListViewHour(
-                    listItems:  widget.listHour,
-                    onTouch: _selectHour,  
-                  ),
-                  Expanded(
-                    child: ListViewDate(
-                      listItems:  widget.listDate,
-                      onTouch: _selectDate,  
+          children: <Widget>[
+            Expanded(
+              flex: 8,
+              child:  DetailView(detail: widget.detail ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListViewHour(
+                      listItems:  widget.listHour,
+                      onTouch: _selectHour,  
+                    ),
+                    Expanded(
+                      child: ListViewDate(
+                        listItems:  widget.listDate,
+                        onTouch: _selectDate,  
+                      )
                     )
-                  )
-                ],
-              ),
-          )
-        ],
-      );
+                  ],
+                ),
+            )
+          ],
+        );
     }
     
     return SafeArea(
@@ -187,6 +195,10 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ),
         body: buildScreen(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _refreshWeather,
+          child: Icon(Icons.refresh),
+        ),
       ),
     );
   }
